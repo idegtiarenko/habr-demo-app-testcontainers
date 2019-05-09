@@ -34,6 +34,8 @@ spec:
     volumeMounts:
     - name: repository
       mountPath: /root/.m2/repository
+    - name: docker-sock
+      mountPath: /var/run/docker.sock
   - name: docker
     image: docker:18.09.2
     command: ["cat"]

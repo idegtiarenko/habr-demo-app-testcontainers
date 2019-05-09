@@ -1,5 +1,6 @@
 package habr.demo.app;
 
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -17,5 +18,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@ExtendWith(IntegrationTestEnvironment.class)
 public @interface IntegrationTest {
 }
