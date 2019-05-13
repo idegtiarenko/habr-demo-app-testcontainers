@@ -13,7 +13,7 @@
     <version>${revision}</version>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>8</java.version>
         <revision>latest-SNAPSHOT</revision>
     </properties>
 

@@ -9,6 +9,7 @@ properties([
         )
 ])
 
+def mvn = 'MAVEN_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap" mvn'
 def branch
 def revision
 def registryIp
@@ -17,7 +18,7 @@ pipeline {
 
     agent {
         kubernetes {
-            label 'build-service-pod'
+            label 'build-service-java8-pod'
             defaultContainer 'jnlp'
             yaml """
 apiVersion: v1
@@ -28,7 +29,7 @@ metadata:
 spec:
   containers:
   - name: maven
-    image: maven:3.6.0-jdk-11-slim
+    image: maven:3.6.0-jdk-8-slim
     command: ["cat"]
     tty: true
     volumeMounts:
@@ -39,10 +40,10 @@ spec:
     resources:
       requests:
         cpu: 1
-        memory: 256Mi
+        memory: 1Gi
       limits:
         cpu: 1
-        memory: 256Mi
+        memory: 1Gi
   - name: docker
     image: docker:18.09.2
     command: ["cat"]
@@ -82,28 +83,28 @@ spec:
         stage ('compile') {
             steps {
                 container('maven') {
-                    sh 'mvn clean compile test-compile'
+                    sh "$mvn clean compile test-compile"
                 }
             }
         }
         stage ('unit test') {
             steps {
                 container('maven') {
-                    sh 'mvn test'
+                    sh "$mvn test"
                 }
             }
         }
         stage ('integration test') {
             steps {
                 container ('maven') {
-                    sh 'mvn verify'
+                    sh "$mvn verify"
                 }
             }
         }
         stage ('build artifact') {
             steps {
                 container('maven') {
-                    sh "mvn package -Dmaven.test.skip -Drevision=${revision}"
+                    sh "$mvn package -Dmaven.test.skip -Drevision=${revision}"
                 }
                 container('docker') {
                     script {
