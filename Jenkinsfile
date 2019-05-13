@@ -36,6 +36,13 @@ spec:
       mountPath: /root/.m2/repository
     - name: docker-sock
       mountPath: /var/run/docker.sock
+    resources:
+      requests:
+        cpu: 1
+        memory: 256Mi
+      limits:
+        cpu: 1
+        memory: 256Mi
   - name: docker
     image: docker:18.09.2
     command: ["cat"]
@@ -126,7 +133,7 @@ spec:
             }
             steps {
                 build job: './../Deploy', parameters: [
-                        [$class: 'StringParameterValue', name: 'GIT_REPO', value: 'habr-demo-app'],
+                        [$class: 'StringParameterValue', name: 'GIT_REPO', value: 'habr-demo-app-testcontainers'],
                         [$class: 'StringParameterValue', name: 'VERSION', value: revision],
                         [$class: 'StringParameterValue', name: 'ENV', value: branch == 'master' ? 'staging' : 'test']
                 ], wait: false
